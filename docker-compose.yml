@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Production service
+  radiocalico-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: radiocalico-prod
+    ports:
+      - "3000:3000"
+    volumes:
+      - radiocalico-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DB_PATH=/app/data/database.sqlite
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Development service
+  radiocalico-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: radiocalico-dev
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_PATH=/app/database.sqlite
+    restart: unless-stopped
+
+volumes:
+  radiocalico-data:
+    driver: local

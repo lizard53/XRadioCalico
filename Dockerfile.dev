@@ -1,0 +1,30 @@
+# Development Dockerfile for Radio Calico
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Set environment variable for database path
+ENV DB_PATH=/app/database.sqlite
+ENV NODE_ENV=development
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start with nodemon for hot reload (install if needed)
+RUN npm install -g nodemon
+
+CMD ["nodemon", "server.js"]

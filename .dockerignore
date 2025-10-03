@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+*.md
+!CLAUDE.md
+database.sqlite
+*.sqlite
+coverage
+.DS_Store
+tests
+jest.config.js
+Dockerfile
+Dockerfile.dev
+docker-compose.yml
+.dockerignore

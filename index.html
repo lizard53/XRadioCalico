@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Calico - Internet Radio Station</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <header>
+        <img src="RadioCalicoStyle/RadioCalicoLogoTM.png" alt="Radio Calico" class="logo">
+        <h1>Radio Calico</h1>
+    </header>
+
+    <main>
+        <div class="now-playing-section">
+            <div class="album-art-container">
+                <img id="album-art" src="https://d3d4yli4hf5bmh.cloudfront.net/cover.jpg" alt="Album Art" class="album-art">
+                <div class="year-badge" id="year-badge">1983</div>
+            </div>
+
+            <div class="track-details">
+                <h2 id="track-artist">Welcome to Radio Calico</h2>
+                <h3 id="track-title">Hit play to start listening</h3>
+                <p id="track-album" class="album-name"></p>
+
+                <div class="quality-info">
+                    <p class="source-quality">Source quality: 16-bit 44.1kHz</p>
+                    <p class="stream-quality">Stream quality: 48kHz FLAC / HLS Lossless</p>
+                </div>
+
+                <div class="rating-section">
+                    <span>Rate this track:</span>
+                    <button class="rating-btn" onclick="rateSong(1)" id="thumbs-up">
+                        👍 <span id="thumbs-up-count">0</span>
+                    </button>
+                    <button class="rating-btn" onclick="rateSong(-1)" id="thumbs-down">
+                        👎 <span id="thumbs-down-count">0</span>
+                    </button>
+                </div>
+
+                <div class="player-controls">
+                    <button class="play-btn" id="playBtn" onclick="togglePlayPause()">▶</button>
+                    <span class="time-display"><span id="elapsedTime">0:00</span> / Live</span>
+                    <button class="volume-btn">🔊</button>
+                    <input type="range" id="volume" min="0" max="100" value="70" oninput="changeVolume(this.value)">
+                </div>
+            </div>
+        </div>
+
+        <div class="previous-tracks-section">
+            <h3>Previous tracks:</h3>
+            <div id="recent-tracks"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Radio Calico. Broadcasting happiness worldwide.</p>
+    </footer>
+
+    <script src="javascript/player.js"></script>
+</body>
+</html>
