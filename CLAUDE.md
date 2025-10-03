@@ -62,16 +62,20 @@ Production container uses persistent volume for SQLite database at `/app/data/da
 
 ## File Structure
 All files must be **≤100 lines** to maintain modularity:
-- `server.js` - Express server with SQLite integration and API endpoints
+- `server.js` - Express server with SQLite integration and API endpoints (exports app and db for testing)
 - `index.html` - Main page structure
 - `css/styles.css` - Brand-compliant styling
 - `javascript/player.js` - HLS player logic, metadata fetching, rating system
 - `package.json` - Dependencies (express, sqlite3) and scripts
 - `database.sqlite` - Auto-created SQLite database
 - `jest.config.js` - Jest testing configuration
-- `tests/backend/` - Backend test suite (Jest + Supertest)
-  - `ratings.test.js` - Ratings API endpoint tests
-  - `database.test.js` - Database operations tests
+- `tests/backend/` - Backend test suite (6 test files, 41 passing tests)
+  - `server-integration.test.js` - Full integration tests (89 lines)
+  - `server-errors.test.js` - Error handling tests (98 lines)
+  - `server-validation.test.js` - Input validation tests (94 lines)
+  - `server-crud-complete.test.js` - Complete CRUD operations (90 lines)
+  - `server-routes-complete.test.js` - Route testing (89 lines)
+  - `server-edge-cases.test.js` - Edge case scenarios (82 lines)
 - **Docker files:**
   - `Dockerfile` - Production container (Alpine, production deps only)
   - `Dockerfile.dev` - Development container (nodemon for hot reload)
@@ -220,30 +224,78 @@ A text version of the styling guide for the webpage is at /Users/ashes/Documents
 
 ### Running Tests
 ```bash
-npm test              # Run all tests
+npm test              # Run all tests (41 passing)
 npm run test:watch    # Run tests in watch mode
 npm run test:coverage # Generate coverage report
 ```
 
-### Test Coverage
-**Backend tests** (`tests/backend/`):
-1. **ratings.test.js** - Ratings API endpoints
-   - Accept thumbs up/down ratings
-   - Reject invalid rating values
-   - Validate required fields
+### Test Coverage Metrics
+**Overall backend coverage** (server.js):
+- **Lines**: 78.94% (75 of 95 lines)
+- **Branches**: 76.19% (16 of 21 branches)
+- **Functions**: 81.81% (9 of 11 functions)
+- **Statements**: 78.94% (75 of 95 statements)
 
-2. **database.test.js** - Database operations
-   - Prevent duplicate votes from same user
-   - Allow users to change their vote
-   - Verify UNIQUE constraint and ON CONFLICT behavior
+### Test Suite Structure
+**6 comprehensive test suites** (`tests/backend/`):
+
+1. **server-integration.test.js** (89 lines)
+   - Full integration workflows
+   - Multi-step user operations
+   - End-to-end rating scenarios
+   - Static file serving verification
+
+2. **server-errors.test.js** (98 lines)
+   - Database error handling
+   - Network failure scenarios
+   - Invalid SQL operation handling
+   - Error response validation
+
+3. **server-validation.test.js** (94 lines)
+   - Input validation for all endpoints
+   - Missing required fields detection
+   - Invalid data type handling
+   - Malformed request rejection
+
+4. **server-crud-complete.test.js** (90 lines)
+   - Complete CRUD lifecycle for users
+   - Create, read, update, delete operations
+   - User not found scenarios
+   - Email uniqueness enforcement
+
+5. **server-routes-complete.test.js** (89 lines)
+   - All API route testing
+   - Users endpoints (GET, POST, PUT, DELETE)
+   - Ratings endpoints (GET, POST)
+   - Response format validation
+
+6. **server-edge-cases.test.js** (82 lines)
+   - Duplicate vote prevention
+   - Vote switching functionality
+   - Empty database handling
+   - Special character handling in inputs
 
 ### Test Results
-All 5 tests passing:
-- ✓ Thumbs up rating acceptance
-- ✓ Thumbs down rating acceptance
-- ✓ Invalid rating rejection
-- ✓ Duplicate vote prevention
-- ✓ Vote switching functionality
+**41 passing tests** covering:
+- All Users CRUD endpoints (GET, POST, PUT, DELETE)
+- All Ratings endpoints (GET counts, POST/update ratings)
+- Input validation and error handling
+- Database constraint enforcement (UNIQUE, ON CONFLICT)
+- Edge cases and boundary conditions
+- Static file serving
+
+### Server.js Test Compatibility
+Server exports module for testing:
+```javascript
+module.exports = { app, db };
+```
+
+Server starts only when run directly (not during tests):
+```javascript
+if (require.main === module) {
+  app.listen(PORT, () => { ... });
+}
+```
 
 ## Logo and Assets
 - Logo: `RadioCalicoStyle/RadioCalicoLogoTM.png` (50x50px in header)
