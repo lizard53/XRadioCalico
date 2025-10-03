@@ -181,6 +181,11 @@ process.on('SIGINT', () => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Radio Calico server running at http://localhost:${port}`);
-});
+// Only start server if not being required for testing
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Radio Calico server running at http://localhost:${port}`);
+  });
+}
+
+module.exports = { app, db };
