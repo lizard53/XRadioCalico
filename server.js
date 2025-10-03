@@ -182,5 +182,5 @@ process.on('SIGINT', () => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Radio Calico server running at http://localhost:${port}`);
 });
